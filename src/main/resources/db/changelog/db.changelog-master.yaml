@@ -1,0 +1,110 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-customers-table
+      author: Möhsün Babayev
+      dbms: mariadb
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            tableExists:
+              tableName: customers
+      changes:
+        - createTable:
+            tableName: customers
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: customers-id-pk
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: customers-id-not_null-constraint
+              - column:
+                  name: phone_number
+                  type: varchar(12)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: customers-phone_number-not_null-constraint
+              - column:
+                  name: address
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: customers-address-not_null-constraint
+  - changeSet:
+      id: create-products-table
+      author: Möhsün Babayev
+      dbms: mariadb
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            tableExists:
+              tableName: products
+      changes:
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: products-id-pk
+              - column:
+                  name: description
+                  type: varchar(255)
+              - column:
+                  name: price
+                  type: decimal(8, 2)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: products-price-not_null-constraint
+  - changeSet:
+      id: create-orders-table
+      author: Möhsün Babayev
+      dbms: mariadb
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            tableExists:
+              tableName: orders
+      changes:
+        - createTable:
+            tableName: orders
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: orders-id-pk
+              - column:
+                  name: customer_id
+                  type: bigint
+                  constraints:
+                    references: customers(id)
+                    foreignKeyName: customer-id-fk
+                    nullable: false
+                    notNullConstraintName: orders-customer_id-not_null-constraint
+              - column:
+                  name: product_id
+                  type: bigint
+                  constraints:
+                    references: products(id)
+                    foreignKeyName: product-id-fk
+                    nullable: false
+                    notNullConstraintName: orders-product_id-not_null-constraint
+              - column:
+                  name: count
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: orders-count-not_null-constraint
